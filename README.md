@@ -57,7 +57,7 @@ pip install opencv-python numpy
 python stego.py
 ```
 
-## 📸 Sample Workflow
+##  Sample Workflow
 
 1. Select an input image.
 2. Enter the secret message.
@@ -86,6 +86,6 @@ python stego.py
 
 * GitHub: https://github.com/N-Aiswarya149
 
-## 📄 License
+##  License
 
 This project is intended for educational and learning purposes.
