@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICTE Steganography</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>🖼️ Image Steganography</h1>
+    <p>Hide and reveal secret messages inside images.</p>
+
+    <!-- Encrypt Section -->
+
+    <div class="card">
+
+        <h2>🔒 Encrypt Message</h2>
+
+        <form action="/encrypt" method="POST" enctype="multipart/form-data">
+
+            <label>Select Image</label>
+
+            <input
+                type="file"
+                name="image"
+                accept="image/*"
+                required>
+
+            <label>Secret Message</label>
+
+            <textarea
+                name="message"
+                rows="5"
+                placeholder="Enter your secret message..."
+                required></textarea>
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                required>
+
+            <button type="submit">
+                Encrypt & Download
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- Decrypt Section -->
+
+    <div class="card">
+
+        <h2>🔓 Decrypt Message</h2>
+
+        <form action="/decrypt" method="POST" enctype="multipart/form-data">
+
+            <label>Encrypted Image</label>
+
+            <input
+                type="file"
+                name="image"
+                accept="image/*"
+                required>
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                required>
+
+            <button type="submit">
+                Reveal Message
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

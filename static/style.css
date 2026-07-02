@@ -1,0 +1,101 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#0f172a,#1e293b,#2563eb);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+}
+
+.container{
+    width:100%;
+    max-width:900px;
+}
+
+h1{
+    color:white;
+    text-align:center;
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+.container>p{
+    color:#ddd;
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    margin-bottom:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+.card h2{
+    margin-bottom:20px;
+    color:#1e3a8a;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    margin-bottom:8px;
+    font-weight:bold;
+}
+
+input[type=file],
+input[type=password],
+textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:15px;
+}
+
+textarea{
+    resize:vertical;
+}
+
+button{
+    width:100%;
+    margin-top:25px;
+    padding:14px;
+    border:none;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{
+    background:#1d4ed8;
+    transform:scale(1.02);
+}
+
+@media(max-width:700px){
+
+    body{
+        padding:20px;
+    }
+
+    h1{
+        font-size:30px;
+    }
+
+    .card{
+        padding:20px;
+    }
+
+}

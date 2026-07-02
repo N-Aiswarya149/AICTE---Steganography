@@ -12,6 +12,7 @@ MarkupSafe==3.0.3
 numpy==2.5.0
 opencv-python==4.13.0.92
 packaging==26.2
+Pillow==11.3.0
 pystache==0.6.8
 python-nmap==0.7.1
 PyYAML==6.0.3

@@ -1,44 +1,119 @@
+from flask import Flask, render_template, request, send_file
 import cv2
 import os
-import string
+import uuid
 
-img = cv2.imread("inputimage.png") # Replace with the correct image path#image
+app = Flask(__name__)
 
-msg = input("Enter secret message:")
-password = input("Enter a passcode:")
+UPLOAD_FOLDER = "uploads"
+ENCRYPTED_FOLDER = "encrypted"
 
-d = {}
-c = {}
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(ENCRYPTED_FOLDER, exist_ok=True)
 
-for i in range(255):
-    d[chr(i)] = i
-    c[i] = chr(i)
 
-m = 0
-n = 0
-z = 0
+@app.route("/")
+def home():
+    return render_template("index.html")
 
-for i in range(len(msg)):
-    img[n, m, z] = d[msg[i]]
-    n = n + 1
-    m = m + 1
-    z = (z + 1) % 3
 
-cv2.imwrite("encryptedImage.jpg", img)
-os.system("start encryptedImage.jpg")  # Use 'start' to open the image on Windows
+@app.route("/encrypt", methods=["POST"])
+def encrypt():
 
-message = ""
-n = 0
-m = 0
-z = 0
+    if "image" not in request.files:
+        return "No image uploaded"
 
-pas = input("Enter passcode for Decryption")
-if password == pas:
-    for i in range(len(msg)):
-        message = message + c[img[n, m, z]]
-        n = n + 1
-        m = m + 1
-        z = (z + 1) % 3
-    print("Decryption message:", message)
-else:
-    print("YOU ARE NOT auth")
+    image = request.files["image"]
+    message = request.form["message"]
+    password = request.form["password"]
+
+    if image.filename == "":
+        return "Please choose an image"
+
+    filename = str(uuid.uuid4()) + ".png"
+
+    image_path = os.path.join(UPLOAD_FOLDER, filename)
+    image.save(image_path)
+
+    img = cv2.imread(image_path)
+
+    if img is None:
+        return "Invalid image."
+
+    # Store password in first pixel
+    img[0, 0, 0] = len(password)
+
+    for i, ch in enumerate(password):
+        img[0, i + 1, 0] = ord(ch)
+
+    # Store message length
+    img[1, 0, 0] = len(message)
+
+    row = 2
+
+    for i, ch in enumerate(message):
+        img[row + i, 0, 0] = ord(ch)
+
+    encrypted_path = os.path.join(ENCRYPTED_FOLDER, filename)
+
+    cv2.imwrite(encrypted_path, img)
+
+    return send_file(
+        encrypted_path,
+        as_attachment=True,
+        download_name="encrypted_image.png"
+    )
+
+
+@app.route("/decrypt", methods=["POST"])
+def decrypt():
+
+    if "image" not in request.files:
+        return "No image uploaded"
+
+    image = request.files["image"]
+    entered_password = request.form["password"]
+
+    filename = str(uuid.uuid4()) + ".png"
+
+    image_path = os.path.join(UPLOAD_FOLDER, filename)
+    image.save(image_path)
+
+    img = cv2.imread(image_path)
+
+    if img is None:
+        return "Invalid image."
+
+    password_length = img[0, 0, 0]
+
+    original_password = ""
+
+    for i in range(password_length):
+        original_password += chr(img[0, i + 1, 0])
+
+    if entered_password != original_password:
+        return "<h2>❌ Wrong Password!</h2>"
+
+    message_length = img[1, 0, 0]
+
+    secret_message = ""
+
+    row = 2
+
+    for i in range(message_length):
+        secret_message += chr(img[row + i, 0, 0])
+
+    return f"""
+    <html>
+    <body style='font-family:Arial;text-align:center;margin-top:100px;'>
+        <h2>✅ Secret Message</h2>
+        <h1>{secret_message}</h1>
+        <br>
+        <a href="/">Go Back</a>
+    </body>
+    </html>
+    """
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
